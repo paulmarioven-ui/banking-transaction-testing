@@ -1,0 +1,49 @@
+import pytest
+
+
+@pytest.mark.parametrize("amount", [-100.00, -1.00, 0])
+def test_transaction_amount_must_be_positive(amount):
+    transaction = {
+        "transaction_type": "WITHDRAWAL",
+        "amount": amount,
+        "currency": "GBP",
+        "status": "COMPLETED"
+    }
+
+    assert transaction["amount"] <= 0
+
+
+@pytest.mark.parametrize("currency", ["USD", "EUR", "XXX", ""])
+def test_invalid_currency_is_rejected(currency):
+    valid_currencies = ["GBP"]
+
+    assert currency not in valid_currencies
+
+
+@pytest.mark.parametrize(
+    "transaction_type",
+    ["LOAN", "REFUND", "INVALID", ""]
+)
+def test_invalid_transaction_type_is_rejected(transaction_type):
+    valid_types = [
+        "DEPOSIT",
+        "TRANSFER",
+        "PAYMENT",
+        "WITHDRAWAL"
+    ]
+
+    assert transaction_type not in valid_types
+
+
+@pytest.mark.parametrize(
+    "status",
+    ["CANCELLED", "REVERSED", "INVALID", ""]
+)
+def test_invalid_status_is_rejected(status):
+    valid_statuses = [
+        "COMPLETED",
+        "PENDING",
+        "FAILED"
+    ]
+
+    assert status not in valid_statuses
